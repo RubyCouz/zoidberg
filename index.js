@@ -5,25 +5,17 @@ const config = require('./config.json')
 const client = new Discord.Client()
 const welcome = require('./welcome/welcome')
 const command = require('./command/command')
-const homeMessage = require ('./homeMessage/homeMessage')
-// // message accueil
-// const homeEmbed = new Discord.MessageEmbed()
-//     .setColor('#FF0000')
-//     .setTitle('Choix de role')
-//     .setURL('https://une.url.com')
-//     .setAuthor('RubyCouz')
-//     .setDescription('choisissez un rôle')
-//     .setFooter('un pti text')
-//
-// channel.send(homeEmbed)
-
+const homeMessage = require('./homeMessage/homeMessage')
+const roleClaim = require('./role/role_claim')
 // quand le bot est prêt
 client.on('ready', function () {
     // définition de l'activité du bot
     client.user.setActivity('Gestion du serveur').catch(console.error)
     // message d'accueil pour l'arrivée d'un membre
     welcome(client)
-    // réponse à une commande ping
+   // réponse à une commande ping
+    roleClaim(client)
+
     command(client, 'ping', (message) => {
         message.channel.send('pong')
     })
@@ -40,14 +32,14 @@ client.on('ready', function () {
     command(client, 'cc', (message) => {
         // check de la permission
         if (message.member.hasPermission('ADMINISTRATOR')) {
-            // réucpération de tous les messages du chan
+            // récupération de tous les messages du chan
             message.channel.messages.fetch().then((results) => {
                 // suppression de tous les messages du chan
-               message.channel.bulkDelete(results)
-                })
+                message.channel.bulkDelete(results)
+            })
         }
     })
-    // création d'un channel
+    // création d'un channel text
     command(client, 'channel', (message) => {
         // échappement de la commande pour récupérer le nom du chan
         const name = message.content.replace('$channel', '')
@@ -64,8 +56,108 @@ client.on('ready', function () {
                 channel.setParent(categoryId)
             })
     })
+    // création channel vocal (voir pour gestion des erreurs si manque nom de chan lors de la création)
+    command(client, 'voicechannel', (message) => {
+        const name = message.content.replace('$voicechannel', '')
+        message.guild.channels.create(name, {
+            type: 'voice',
+        })
+            .then((channel) => {
+                const categoryId = '818757144962662420'
+                channel.setParent(categoryId)
+                channel.setUserLimit(10)
+            })
+    })
+    // message embed
+    command(client, 'embed', (message) => {
+        console.log(message.author)
+        const embed = new Discord.MessageEmbed()
 
-    homeMessage(client, '836186856781643776', 'hello world', ['👋', '🖖', '🖕'])
+            .setTitle('Test embed')
+            .setURL('https://www.youtube.com/watch?v=C22dH_ZUj-Q&list=PLaxxQQak6D_fxb9_-YsmRwxfw5PH9xALe&index=11')
+            .setAuthor(message.author.username)
+            .setImage('https://cdn.wallpapersafari.com/63/23/rcteLA.jpg')
+            .setThumbnail('https://cdn.wallpapersafari.com/63/23/rcteLA.jpg')
+            .setFooter('exemple de footer', 'https://cdn.wallpapersafari.com/63/23/rcteLA.jpg')
+            .setColor('#ff0000')
+            .addFields(
+                {
+                    name: 'Field1',
+                    value: 'hello world',
+                    inline: true
+                },
+                {
+                    name: 'Field2',
+                    value: 'hello world',
+                    inline: true
+                },
+                {
+                    name: 'Field3',
+                    value: 'hello world',
+                    inline: true
+                },
+                {
+                name: 'Field4',
+                value: 'Some text here'
+                }
+            )
+
+        message.channel.send(embed)
+    })
+    // info serveur
+    command(client, 'serverinfo', (message) => {
+        const { guild } = message
+        // récupérération des info nécessaires, voir doc discord.js, guild
+        const { name, region, memberCount, owner, afkTimeout } = guild
+        const icon = guild.iconURL()
+        const embed = new Discord.MessageEmbed()
+            .setTitle(`Server info for ${name}`)
+            .setThumbnail(icon)
+            .setColor('#000000')
+            .addFields(
+                {
+                    name: 'Name',
+                    value: name,
+                    inline: true
+                },
+                {
+                    name: 'Region',
+                    value: region,
+                    inline: true
+                },
+                {
+                    name: 'Member count',
+                    value: memberCount,
+                    inline: true
+                },
+                {
+                    name: 'Owner',
+                    value: owner.user.tag,
+                    inline: true
+                },
+                {
+                    name: 'AFK TimeOut',
+                    value: afkTimeout,
+                    inline: true
+                }
+            )
+
+        message.channel.send(embed);
+    })
+    // commande help
+    command(client, 'help', (message) => {
+        message.channel.send(`
+        Commandes actives : 
+        
+        **$serverinfo** - informations sur le serveur
+        **$embed** - affiche un message stylisé
+        **$cc** - supprime tout les messages du channel sur lequel est tapé la commande
+        **$channel nom_du_channel** création d'un channel de texte
+        **$voicechannel nom_du_channel** - création d'un channel vocal
+        **$server** - une info server
+        **$ping** - pong 
+        `)
+    })
 })
 
 
