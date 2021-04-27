@@ -13,7 +13,7 @@ client.on('ready', function () {
     client.user.setActivity('Gestion du serveur').catch(console.error)
     // message d'accueil pour l'arrivée d'un membre
     welcome(client)
-   // réponse à une commande ping
+    // réponse à une commande ping
     roleClaim(client)
 
     command(client, 'ping', (message) => {
@@ -97,8 +97,8 @@ client.on('ready', function () {
                     inline: true
                 },
                 {
-                name: 'Field4',
-                value: 'Some text here'
+                    name: 'Field4',
+                    value: 'Some text here'
                 }
             )
 
@@ -106,9 +106,9 @@ client.on('ready', function () {
     })
     // info serveur
     command(client, 'serverinfo', (message) => {
-        const { guild } = message
+        const {guild} = message
         // récupérération des info nécessaires, voir doc discord.js, guild
-        const { name, region, memberCount, owner, afkTimeout } = guild
+        const {name, region, memberCount, owner, afkTimeout} = guild
         const icon = guild.iconURL()
         const embed = new Discord.MessageEmbed()
             .setTitle(`Server info for ${name}`)
@@ -156,7 +156,49 @@ client.on('ready', function () {
         **$voicechannel nom_du_channel** - création d'un channel vocal
         **$server** - une info server
         **$ping** - pong 
+        **$ban** - ban un utilisateur
+        **kick** - kick un utilisateur
         `)
+    })
+    // commande ban
+    command(client, 'ban', (message) => {
+        const {member, mentions} = message
+        // récupération du user demandant le ban
+        const tag = `<@${member.id}>`
+        if (member.hasPermission('ADMINISTRATOR') || member.hasPermission('BAN_MEMBERS')) {
+            // récupération du user mentionné
+            const target = mentions.users.first()
+            if (target) {
+                const targetMember = message.guild.members.cache.get(target.id)
+                // ban du user mentionné
+                targetMember.ban()
+                message.channel.send(`Quel ban merveilleux ${tag}`)
+            } else {
+                message.channel.send(`${tag} je peux pas ban si tu ne me dis pas qui je dois ban, hein !!!`)
+            }
+        } else {
+            message.channel.send(`${tag} tu n'as pas la permission d'utiliser cette commande... Noob !!!`)
+        }
+    })
+    // commande kick
+    command(client, 'kick', (message) => {
+        const {member, mentions} = message
+        // récupération du user demandant le ban
+        const tag = `<@${member.id}>`
+        if (member.hasPermission('ADMINISTRATOR') || member.hasPermission('KICK_MEMBERS')) {
+            // récupération des infos user mentionné
+            const target = mentions.users.first()
+            if (target) {
+                const targetMember = message.guild.members.cache.get(target.id)
+                // ban du user mentionné
+                targetMember.kick()
+                message.channel.send(`Quel kick merveilleux ${tag}`)
+            } else {
+                message.channel.send(`${tag} je peux pas kick si tu ne me dis pas qui je dois kick, hein !!!`)
+            }
+        } else {
+            message.channel.send(`${tag} tu n'as pas la permission d'utiliser cette commande... Noob !!!`)
+        }
     })
 })
 
