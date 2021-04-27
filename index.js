@@ -5,20 +5,24 @@ const config = require('./config.json')
 const client = new Discord.Client()
 const welcome = require('./welcome/welcome')
 const command = require('./command/command')
-const homeMessage = require('./homeMessage/homeMessage')
+// const homeMessage = require('./homeMessage/homeMessage')
+
 const roleClaim = require('./role/role_claim')
+const poll = require('./poll/poll')
 // quand le bot est prêt
 client.on('ready', function () {
     // définition de l'activité du bot
     client.user.setActivity('Gestion du serveur').catch(console.error)
     // message d'accueil pour l'arrivée d'un membre
     welcome(client)
-    // réponse à une commande ping
+    // gestion de rôle user
     roleClaim(client)
-
-    command(client, 'ping', (message) => {
-        message.channel.send('pong')
-    })
+    // système de vote
+    poll(client)
+    // réponse à une commande ping
+    // command(client, 'ping', (message) => {
+    //     message.channel.send('pong')
+    // })
     // nombre de personne sur le serveur
     command(client, 'server', (message) => {
         // récupération des info du serveur
@@ -158,6 +162,7 @@ client.on('ready', function () {
         **$ping** - pong 
         **$ban** - ban un utilisateur
         **kick** - kick un utilisateur
+        **$poll** - après un message, permet d'ajouter les réactions like et dislike sur ce message (si pas posté dans le chan suggestion)
         `)
     })
     // commande ban
@@ -174,10 +179,10 @@ client.on('ready', function () {
                 targetMember.ban()
                 message.channel.send(`Quel ban merveilleux ${tag}`)
             } else {
-                message.channel.send(`${tag} je peux pas ban si tu ne me dis pas qui je dois ban, hein !!!`)
+                message.channel.send(`${tag} Je peux pas ban si tu ne me dis pas qui je dois ban, hein !!!`)
             }
         } else {
-            message.channel.send(`${tag} tu n'as pas la permission d'utiliser cette commande... Noob !!!`)
+            message.channel.send(`${tag} Tu n'as pas la permission d'utiliser cette commande... Noob !!!`)
         }
     })
     // commande kick
@@ -194,10 +199,10 @@ client.on('ready', function () {
                 targetMember.kick()
                 message.channel.send(`Quel kick merveilleux ${tag}`)
             } else {
-                message.channel.send(`${tag} je peux pas kick si tu ne me dis pas qui je dois kick, hein !!!`)
+                message.channel.send(`${tag} Je peux pas kick si tu ne me dis pas qui je dois kick, hein !!!`)
             }
         } else {
-            message.channel.send(`${tag} tu n'as pas la permission d'utiliser cette commande... Noob !!!`)
+            message.channel.send(`${tag} Tu n'as pas la permission d'utiliser cette commande... Noob !!!`)
         }
     })
 })

@@ -3,7 +3,7 @@ module.exports = client => {
     const channelId = '836186856781643776'
     // à l'arrivée d'un membre sur le serveur
     client.on('guildMemberAdd', (member) => {
-        // affichage des infos du membre en cosole
+        // affichage des infos du membre en console
     console.log(member)
         // définition du message d'accueil
         const message = `Please welcome <@${member.id}> to the server`
