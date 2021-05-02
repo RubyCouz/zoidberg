@@ -1,5 +1,5 @@
 // import du prefix
-const {prefix} = require('../config.json')
+const {prefix} = require('./config.json')
 module.exports = (client, aliases, callback) => {
     // si l'alias est une chaine de caratère
     if (typeof aliases === 'string') {
