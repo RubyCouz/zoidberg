@@ -4,6 +4,7 @@ module.exports = {
     permissionError: 'Vous n\'avez pas la permission nécessaire pour exécuter cette commande.',
     minArgs: 2,
     maxArgs:2,
+    description: 'test',
     callback: (message, arguments, text) => {
 
     },

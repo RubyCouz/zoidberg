@@ -1,3 +1,5 @@
+const loadCommands = require('../load_commands')
+
 const Discord = require("discord.js");
 module.exports = {
     commands: ['serverinfo'],
@@ -5,6 +7,7 @@ module.exports = {
     permissionError: 'Vous n\'avez pas la permission nécessaire pour exécuter cette commande.',
     minArgs: 0,
     maxArgs: 0,
+    description: 'Informations sur le serveur',
     callback: (client, message, arguments, text) => {
         const {guild} = message
             // récupérération des info nécessaires, voir doc discord.js, guild

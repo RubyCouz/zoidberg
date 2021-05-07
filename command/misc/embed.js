@@ -1,3 +1,5 @@
+const loadCommands = require('../load_commands')
+
 const Discord = require("discord.js");
 module.exports = {
     commands: ['embed'],
@@ -5,6 +7,7 @@ module.exports = {
     permissionError: 'Vous n\'avez pas la permission nécessaire pour exécuter cette commande.',
     minArgs: 0,
     maxArgs: 0,
+    description: 'Affichage d\'un message "amélioré"',
     callback: (client, message, arguments, text) => {
             console.log(message.author)
             const embed = new Discord.MessageEmbed()

@@ -1,9 +1,12 @@
+const loadCommands = require('../load_commands')
+
 module.exports = {
     commands: ['kick'],
     expectedArgs: '<member>',
     permissionError: 'Vous n\'avez pas la permission nécessaire pour exécuter cette commande.',
     minArgs: 1,
     maxArgs: 1,
+    description: 'Kick un membre du serveur (temporaire)',
     callback: (client, message, arguments, text) => {
         const {member, mentions} = message
             // récupération du user demandant le ban

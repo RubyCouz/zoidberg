@@ -1,3 +1,5 @@
+const loadCommands = require('./load_commands')
+
 const {prefix} = require('../config.json')
 // fonction permettant la vérification des permissions
 const validatePermissions = (permissions) => {
@@ -37,8 +39,6 @@ const validatePermissions = (permissions) => {
     ]
     // boucle parcourant le tableau pour vérifier que la permission spécifiée est bien dans le tableau
     for (const permission of permissions) {
-        console.log(permissions)
-        console.log(permission)
         // si elle n'est pas dans le tableau
         if (!ValidPermissions.includes(permission)) {
             // envoie d'une erreur
@@ -49,7 +49,7 @@ const validatePermissions = (permissions) => {
 
 const allCommands = {}
 
-module.exports = (commandOptions) => {
+module.exports = (client, commandOptions) => {
     let {
         commands,
         permissions = [],
@@ -58,8 +58,6 @@ module.exports = (commandOptions) => {
     if (typeof commands === 'string') {
         commands = [commands]
     }
-    console.log(commands)
-    console.log(`enregistrement de la commande ${commands[0]}`)
     // vérification que les permissions sont valides et comprise dans le tableau
     if (permissions.length) {
         // vérification que la permission est bien un tableau, si char => convertion en tableau
@@ -70,6 +68,7 @@ module.exports = (commandOptions) => {
     }
     for (const command of commands) {
         allCommands[command] = {
+            // destructuration de l'objet commandOptions
             ...commandOptions,
             commands,
             permissions
@@ -87,14 +86,17 @@ module.exports.listen = (client) => {
         const arguments = content.split(/[ ]+/)
         // suppression de la commande du premier index
         const name = arguments.shift().toLowerCase()
-
+        // si le nom commence par le préfix
         if(name.startsWith(prefix)) {
+            // récupération du nom de la commande
             const command = allCommands[name.replace(prefix, '')]
+            // si la commande n'existe, on fait rien
             if(!command) {
                 return
             }
 
             const {
+                commands,
                 permissions,
                 permissionError = 'Vous n\'avez pas la permission d\'utiliser cette commande',
                 requiredRoles = [],
@@ -124,7 +126,7 @@ module.exports.listen = (client) => {
 
             // vérification du nombre d'arguments dans la commande
             if (arguments.length < minArgs || (maxArgs !== null && arguments.length > maxArgs)) {
-                message.reply(`Syntaxe incorrecte. Veuillez utiliser la syntaxe suivante : ${prefix}${alias} ${expectedArgs}`)
+                message.reply(`Syntaxe incorrecte. Veuillez utiliser la syntaxe suivante : ${prefix}${commands} ${expectedArgs}`)
                 return
             }
 

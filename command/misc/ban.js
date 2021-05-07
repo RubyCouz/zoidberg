@@ -1,9 +1,12 @@
+const loadCommands = require('../load_commands')
+
 module.exports = {
     commands: ['ban'],
     expectedArgs: '<member>',
     permissionError: 'Vous n\'avez pas la permission nécessaire pour exécuter cette commande.',
     minArgs: 1,
     maxArgs: 1,
+    description: 'Bannir un membre du serveur (définitif)',
     callback: (client, message, arguments, text) => {
         const {member, mentions} = message
             // récupération du user demandant le ban

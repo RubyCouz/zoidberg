@@ -27,7 +27,7 @@ module.exports = (client) => {
     })
     // à l'arrivée d'un membre sur le serveur
     client.on('guildMemberAdd', async member => {
-        const {guild} = member
+        const {guild, id} = member
         // récupération du nombre d'invitation avant et après l'arrivée d'un membre sur le serveur
         const invitesBefore = invites[guild.id]
         const invitesAfter = await getInviteCounts(guild)
@@ -37,8 +37,9 @@ module.exports = (client) => {
 
         for (const inviter in invitesAfter) {
             if(invitesBefore[inviter] === invitesAfter[inviter] - 1) {
-                 const channelId = '838449753544720434'
+                const channelId = '838449753544720434'
                 const channel = guild.channels.cache.get(channelId)
+                const count = invitesAfter[inviter]
                 channel.send(
                     `<@${id}> arrive sur le discord, invité par ${inviter} (${count} invitations)`
                 )

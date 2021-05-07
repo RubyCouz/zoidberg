@@ -4,8 +4,6 @@ module.exports = client => {
     const targetChannelId = '836583472268050454' // chan rôle
     // à l'arrivée d'un membre sur le serveur
     client.on('guildMemberAdd', (member) => {
-        // affichage des infos du membre en console
-    console.log(member)
         // définition du message d'accueil
         const message = `Bienvenue sur Test Dev, <@${member.id} !!! Veuillez passer par le salon ${member
             .guild.channels.cache

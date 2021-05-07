@@ -5,10 +5,13 @@ const Discord = require('discord.js')
 const config = require('./config.json')
 // instanciation de la classe client
 const client = new Discord.Client()
+const loadCommands = require ('./command/load_commands')
 const welcome = require('./welcome/welcome')
 const invitNotif = require('./notifications/invites')
 const roleClaim = require('./role/role_claim')
 const poll = require('./poll/poll')
+const commandBase = require('./command/command-base');
+const advPoll = require('./poll/advenced_poll')
 // quand le bot est prêt
 client.on('ready', function () {
     console.log('bot ready !!!')
@@ -22,26 +25,12 @@ client.on('ready', function () {
     poll(client)
     // notification de la personne qui à invité un membre à rejoindre le serveur
     invitNotif(client)
-    const baseFile = 'command-base.js'
-    const commandBase = require(`./command/${baseFile}`)
-
-    const readCommands = (dir) => {
-        const files = fs.readdirSync(path.join(__dirname, dir))
-        for (const file of files) {
-            const stat = fs.lstatSync(path.join(__dirname, dir, file))
-            if (stat.isDirectory()) {
-                readCommands(path.join(dir, file))
-            } else if (file !== baseFile) {
-                const option = require(path.join(__dirname, dir, file))
-                console.log(file, option)
-                commandBase(option)
-            }
-        }
-    }
-
-    readCommands('command')
     // listener de commande (unique)
     commandBase.listen(client)
+    // chargement des commandes
+    loadCommands(client)
+    // chargement poll avancé
+    advPoll(client)
 
 })
 

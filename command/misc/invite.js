@@ -5,6 +5,7 @@ module.exports = {
     permissionError: 'Vous n\'avez pas la permission nécessaire pour exécuter cette commande.',
     minArgs: 0,
     maxArgs: 0,
+    description: 'Classement des membres par invitations envoyées',
     callback: (client, message, arguments, text) => {
         // récupération de la guild dans l'objet message
 const {guild} = message

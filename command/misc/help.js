@@ -1,25 +1,49 @@
+const loadCommands = require('../load_commands')
+const {prefix} = require('../../config.json')
 module.exports = {
     commands: ['help'],
-    expectedArgs: '',
-    permissionError: 'Vous n\'avez pas la permission nécessaire pour exécuter cette commande.',
-    minArgs: 0,
-    maxArgs: 0,
+    description: 'Listes des commandes du bot',
     callback: (client, message, arguments, text) => {
-            message.channel.send(`
-            Commandes actives :
+        let reply = 'Zoidberg pour vous servir, voici mes commandes : \n\n'
 
-            **$serverinfo** - informations sur le serveur
-            **$embed** - affiche un message stylisé
-            **$cc** - supprime tout les messages du channel sur lequel est tapé la commande
-            **$channel nom_du_channel** création d'un channel de texte
-            **$voicechannel nom_du_channel** - création d'un channel vocal
-            **$server** - une info server
-            **$ping** - pong
-            **$ban** - ban un utilisateur
-            **$kick** - kick un utilisateur
-            **$poll** - après un message, permet d'ajouter les réactions like et dislike sur ce message (si pas posté dans le chan suggestion)
-            `)
+        const commands = loadCommands()
+        for (const command of commands) {
+            // récupération des permissions
+            let permissions = command.permission
+            // vérification des permissions
+            if (permissions) {
+                let hasPermission = true
+                // check du type de la permission (string / array)
+                if (typeof permissions === 'string') {
+                    // si c'est une chaine de caractères, conversion en tableau
+                    permissions = [permissions]
+                }
+
+                for (const permission of permissions) {
+                    // si la personne qui fait la commande n'as pas la permission
+                    if (!message.member.hasPermission(permission)) {
+                        hasPermission = false;
+                        break
+                    }
+                }
+                if (!hasPermission) {
+                    continue
+                }
+            }
+            const mainCommand =
+            // si la commande est un string
+                typeof command.commands === 'string'
+                    // on utilse la chaine de caractère
+                ? command.commands
+                    // sinon le tableau
+                : command.commands[0]
+            const args = command.expectedArgs ? ` ${command.expectedArgs}` : ''
+            const {description} = command
+
+            reply += `**${mainCommand}${args}** = ${description}\n`
+        }
+        message.channel.send(reply)
     },
     permissions: [],
-    requiredRoles : [],
+    requiredRoles: [],
 }
