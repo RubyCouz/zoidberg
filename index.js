@@ -15,7 +15,6 @@ const roleClaim = require('./role/role_claim')
 const poll = require('./poll/poll')
 const commandBase = require('./command/command-base');
 const advPoll = require('./poll/advenced_poll')
-
 /**
  * quand le bot est prêt
  */
@@ -28,10 +27,11 @@ client.on('ready', async () => {
         } catch (e) {
 
         } finally {
-            // fermeture de la connexion à mongoDB (dans finally => tout le temps exécutée)
+            // fermeture de la connexion à mongoDB (dans finally => tout le temps exécutée
             mongoose.connection.close()
         }
     })
+
     // définition de l'activité du bot
     client.user.setActivity('Gestion du serveur').catch(console.error)
     // message d'accueil pour l'arrivée d'un membre
@@ -49,6 +49,17 @@ client.on('ready', async () => {
     // chargement poll avancé
     advPoll(client)
 
+    await commandBase.loadPrefixes(client)
+    client.on('message', message => {
+        const {content, guild} = message
+
+        const guildPrefixes = {}
+        const prefix = guildPrefixes[guild.id] || config.prefix
+        if (content.includes(`${prefix}`)) {
+
+        }
+
+    })
 })
 
 

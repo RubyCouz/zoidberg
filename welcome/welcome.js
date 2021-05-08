@@ -1,3 +1,4 @@
+const mongo = require ('../mongo')
 module.exports = client => {
     // récupération id channel
     const channelId = '836186856781643776'
@@ -22,3 +23,11 @@ module.exports = client => {
         })
     })
 }
+// récupération message en bdd
+//     await mongo.then(mongoose => {
+//         try {
+//             const result = await welcomeSchema.findOne({ _id: guild.id})
+//         } finally {
+//            mongoose.connection.close()
+//         }
+//     })

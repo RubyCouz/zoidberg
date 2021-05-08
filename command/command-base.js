@@ -1,6 +1,10 @@
 const loadCommands = require('./load_commands')
-
-const {prefix} = require('../config.json')
+// chargement de mongo et schema
+const mongo = require ('../mongo')
+const prefixSchema = require ('../schema/prefix_schema')
+// chargement du prefix
+const {prefix: globalPrefix} = require('../config.json')
+const guildPrefixes = {}
 // fonction permettant la vérification des permissions
 const validatePermissions = (permissions) => {
     // tableau des permission
@@ -79,9 +83,10 @@ module.exports = (client, commandOptions) => {
 module.exports.listen = (client) => {
     // ecoute du message
     client.on('message', message => {
+
         // récupération du membre, contenu du message et serveur contenus dans l'objet message
         const {member, content, guild, channels} = message
-
+        const prefix = guildPrefixes[guild.id] || globalPrefix
         // suppression des espaces dans la commande et stockage dans un tableau
         const arguments = content.split(/[ ]+/)
         // suppression de la commande du premier index
@@ -131,7 +136,24 @@ module.exports.listen = (client) => {
             }
 
             callback(client, message, arguments, arguments.join(' '))
+            return
         }
 
     })
+}
+
+module.exports.loadPrefixes = async (client) => {
+    await mongo().then(async mongoose => {
+        try {
+            for (const guild of client.guilds.cache) {
+                const guildId = guild[1].id
+                const result = await prefixSchema.findOne({_id: guildId})
+                console.log(result)
+                guildPrefixes[guildId] = result.prefix
+            }
+        } finally {
+            await mongoose.connection.close()
+        }
+    })
+
 }
