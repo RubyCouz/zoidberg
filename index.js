@@ -48,18 +48,9 @@ client.on('ready', async () => {
     loadCommands(client)
     // chargement poll avancé
     advPoll(client)
-
+    // chargement du prefix stocké en base de données
     await commandBase.loadPrefixes(client)
-    client.on('message', message => {
-        const {content, guild} = message
 
-        const guildPrefixes = {}
-        const prefix = guildPrefixes[guild.id] || config.prefix
-        if (content.includes(`${prefix}`)) {
-
-        }
-
-    })
 })
 
 

@@ -1,7 +1,7 @@
 const loadCommands = require('./load_commands')
 // chargement de mongo et schema
-const mongo = require ('../mongo')
-const prefixSchema = require ('../schema/prefix_schema')
+const mongo = require('../mongo')
+const prefixSchema = require('../schema/prefix_schema')
 // chargement du prefix
 const {prefix: globalPrefix} = require('../config.json')
 const guildPrefixes = {}
@@ -92,11 +92,11 @@ module.exports.listen = (client) => {
         // suppression de la commande du premier index
         const name = arguments.shift().toLowerCase()
         // si le nom commence par le préfix
-        if(name.startsWith(prefix)) {
+        if (name.startsWith(prefix)) {
             // récupération du nom de la commande
             const command = allCommands[name.replace(prefix, '')]
             // si la commande n'existe, on fait rien
-            if(!command) {
+            if (!command) {
                 return
             }
 
@@ -148,7 +148,6 @@ module.exports.loadPrefixes = async (client) => {
             for (const guild of client.guilds.cache) {
                 const guildId = guild[1].id
                 const result = await prefixSchema.findOne({_id: guildId})
-                console.log(result)
                 guildPrefixes[guildId] = result.prefix
             }
         } finally {
