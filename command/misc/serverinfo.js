@@ -1,5 +1,3 @@
-const loadCommands = require('../load_commands')
-
 const Discord = require("discord.js");
 module.exports = {
     commands: ['serverinfo'],

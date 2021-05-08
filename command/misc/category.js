@@ -1,5 +1,3 @@
-const loadCommands = require('../load_commands')
-
 module.exports = {
     commands: ['cat'],
     expectedArgs: '<name>',

@@ -1,5 +1,3 @@
-const loadCommands = require('../load_commands')
-
 module.exports = {
     commands: ['ban'],
     expectedArgs: '<member>',

@@ -1,5 +1,3 @@
-const loadCommands = require('../load_commands')
-
 module.exports = {
     commands: ['delete'],
     permissionError: 'Vous n\'avez pas la permission nécessaire pour exécuter cette commande.',

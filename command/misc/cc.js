@@ -1,4 +1,3 @@
-const loadCommands = require('../load_commands')
 module.exports = {
     commands: ['cc'],
     expectedArgs: '',

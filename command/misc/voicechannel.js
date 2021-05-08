@@ -1,5 +1,3 @@
-const loadCommands = require('../load_commands')
-
 module.exports = {
     commands: ['voicechannel'],
     expectedArgs: '<num1> <num2>',
